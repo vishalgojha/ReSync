@@ -45,11 +45,11 @@ export default function ConnectScreen() {
   const showRetry = connectionState === 'error'
 
   return (
-    <div className="flex h-screen items-center justify-center bg-bg-primary">
+    <div className="flex h-screen items-center justify-center bg-background">
       <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold text-text-primary">ReSync</h1>
-          <p className="text-sm text-text-secondary">WhatsApp to Browser</p>
+          <h1 className="text-2xl font-semibold text-foreground">ReSync</h1>
+          <p className="text-sm text-muted-foreground">WhatsApp to Browser</p>
         </div>
 
         <div className={cn('flex items-center gap-2 text-sm', status.color)}>
@@ -77,14 +77,14 @@ export default function ConnectScreen() {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-muted-foreground">
               {syncProgress?.type === 'chats' ? 'Syncing chats' : 'Syncing contacts'} ({syncProgress?.current}/{syncProgress?.total})
             </p>
           </div>
         )}
 
         {(connectionState === 'syncing' || connectionState === 'connected') && progress === null && (
-          <p className="text-xs text-text-muted">Preparing...</p>
+          <p className="text-xs text-muted-foreground">Preparing...</p>
         )}
 
         {showRetry && (

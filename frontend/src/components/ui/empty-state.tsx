@@ -21,16 +21,16 @@ function EmptyState({ icon, title, description, action, className }: EmptyStateP
       )}
     >
       {icon && (
-        <div className="mb-4 text-text-muted">{icon}</div>
+        <div className="mb-4 text-muted-foreground">{icon}</div>
       )}
-      <h3 className="text-sm font-medium text-text-secondary">{title}</h3>
+      <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
       {description && (
-        <p className="mt-1 max-w-sm text-sm text-text-muted">{description}</p>
+        <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>
       )}
       {action && (
         <button
           onClick={action.onClick}
-          className="mt-4 inline-flex items-center rounded-[var(--radius-md)] bg-accent px-4 py-1.5 text-sm font-medium text-text-accent transition-colors hover:bg-accent-hover"
+          className="mt-4 inline-flex items-center rounded-md bg-accent px-4 py-1.5 text-sm font-medium text-accent-foreground transition-colors hover:bg-accent/90"
         >
           {action.label}
         </button>

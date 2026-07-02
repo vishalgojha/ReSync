@@ -192,34 +192,34 @@ export default function CommandPalette({ onFocusSearch }: CommandPaletteProps) {
   return createPortal(
     <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[12vh]">
       <div
-        className="fixed inset-0 bg-bg-overlay"
+        className="fixed inset-0 bg-black/60"
         onClick={close}
       />
-      <div className="relative z-[61] w-full max-w-lg rounded-[var(--radius-lg)] border border-border bg-bg-secondary shadow-2xl overflow-hidden">
+      <div className="relative z-[61] w-full max-w-lg rounded-[var(--radius-lg)] border border-border bg-card shadow-2xl overflow-hidden">
         <div className="flex items-center gap-3 border-b border-border px-4">
-          <Search className="h-4 w-4 shrink-0 text-text-muted" />
+          <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search..."
-            className="flex-1 bg-transparent py-3 text-sm text-text-primary outline-none placeholder:text-text-muted"
+            className="flex-1 bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
-          <kbd className="hidden shrink-0 rounded-[var(--radius-sm)] border border-border bg-bg-primary px-1.5 py-0.5 text-[10px] font-medium text-text-muted sm:inline-block">
+          <kbd className="hidden shrink-0 rounded-[var(--radius-sm)] border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-block">
             ESC
           </kbd>
         </div>
 
         <div className="max-h-[360px] overflow-y-auto py-2">
           {filtered.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-text-muted">
+            <div className="px-4 py-8 text-center text-sm text-muted-foreground">
               No results for &ldquo;{query}&rdquo;
             </div>
           ) : (
             Array.from(sections.entries()).map(([section, commands]) => (
               <div key={section}>
-                <div className="px-4 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wider text-text-muted">
+                <div className="px-4 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                   {section}
                 </div>
                 {commands.map((cmd) => {
@@ -232,13 +232,13 @@ export default function CommandPalette({ onFocusSearch }: CommandPaletteProps) {
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={cn(
                         'flex w-full items-center gap-3 px-4 py-2 text-left text-sm transition-colors',
-                        selected ? 'bg-bg-hover' : '',
+                        selected ? 'bg-secondary' : '',
                       )}
                     >
-                      <cmd.icon className="h-4 w-4 shrink-0 text-text-muted" />
-                      <span className="flex-1 text-text-primary">{cmd.label}</span>
+                      <cmd.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <span className="flex-1 text-foreground">{cmd.label}</span>
                       {cmd.shortcut && (
-                        <kbd className="rounded-[var(--radius-sm)] border border-border bg-bg-primary px-1.5 py-0.5 text-[10px] font-medium text-text-muted">
+                        <kbd className="rounded-[var(--radius-sm)] border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
                           {cmd.shortcut}
                         </kbd>
                       )}

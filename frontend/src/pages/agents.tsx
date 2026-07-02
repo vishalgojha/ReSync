@@ -105,13 +105,13 @@ export default function AgentsPage() {
 
   if (!selectedAgent) {
     return (
-      <div className="flex h-screen bg-bg-primary">
+      <div className="flex h-screen bg-background">
         <Sidebar />
         <div className="flex-1 overflow-y-auto p-6">
           <div className="max-w-2xl mx-auto space-y-4">
             <div className="flex items-center gap-3 mb-6">
               <Bot className="h-6 w-6 text-accent" />
-              <h1 className="text-lg font-semibold text-text-primary">Agents</h1>
+              <h1 className="text-lg font-semibold text-foreground">Agents</h1>
             </div>
 
             {fetching ? (
@@ -142,16 +142,16 @@ export default function AgentsPage() {
                   <button
                     key={agent.id}
                     onClick={() => selectAgent(agent)}
-                    className="w-full text-left rounded-[var(--radius-lg)] border border-border bg-bg-secondary p-4 hover:bg-bg-hover transition-colors"
+                    className="w-full text-left rounded-[var(--radius-lg)] border border-border bg-card p-4 hover:bg-secondary transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <Avatar name={agent.name} size="md" />
+                      <Avatar name={agent.name} className="size-10" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-text-primary">{agent.name}</span>
+                          <span className="text-sm font-medium text-foreground">{agent.name}</span>
                           <Badge variant="default">v{agent.version}</Badge>
                         </div>
-                        <p className="text-xs text-text-muted mt-0.5">{agent.description}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{agent.description}</p>
                       </div>
                     </div>
                   </button>
@@ -165,17 +165,17 @@ export default function AgentsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-bg-primary">
+    <div className="flex h-screen bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-bg-secondary flex-shrink-0">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card flex-shrink-0">
           <Button variant="ghost" size="icon" onClick={handleBack}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Avatar name={selectedAgent.name} size="sm" />
+          <Avatar name={selectedAgent.name} className="size-8" />
           <div className="flex-1 min-w-0">
-            <h1 className="text-sm font-medium text-text-primary">{selectedAgent.name}</h1>
-            <p className="text-[10px] text-text-muted">{selectedAgent.id}</p>
+            <h1 className="text-sm font-medium text-foreground">{selectedAgent.name}</h1>
+            <p className="text-[10px] text-muted-foreground">{selectedAgent.id}</p>
           </div>
         </div>
 
@@ -186,8 +186,8 @@ export default function AgentsPage() {
                 <div
                   className={`max-w-[80%] rounded-[var(--radius-lg)] px-3 py-2 ${
                     msg.role === 'user'
-                      ? 'bg-accent text-text-accent rounded-br-sm'
-                      : 'bg-bg-tertiary text-text-primary rounded-bl-sm'
+                      ? 'bg-accent text-primary-foreground rounded-br-sm'
+                      : 'bg-secondary text-foreground rounded-bl-sm'
                   }`}
                 >
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -196,7 +196,7 @@ export default function AgentsPage() {
               {msg.toolCalls && msg.toolCalls.length > 0 && (
                 <div className="mt-0.5 space-y-0.5">
                   {msg.toolCalls.map((tc, tci) => (
-                    <div key={tci} className="flex items-center gap-1 text-[10px] text-text-muted px-1">
+                    <div key={tci} className="flex items-center gap-1 text-[10px] text-muted-foreground px-1">
                       <span>{tc.name}</span>
                     </div>
                   ))}
@@ -207,8 +207,8 @@ export default function AgentsPage() {
 
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-bg-tertiary rounded-[var(--radius-lg)] px-3 py-2">
-                <p className="text-sm text-text-muted">Thinking...</p>
+              <div className="bg-secondary rounded-[var(--radius-lg)] px-3 py-2">
+                <p className="text-sm text-muted-foreground">Thinking...</p>
               </div>
             </div>
           )}
@@ -220,7 +220,7 @@ export default function AgentsPage() {
                 <div>
                   <p className="text-sm text-danger">{error}</p>
                   {error.includes('AI not configured') && (
-                    <p className="text-xs text-text-secondary mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       Configure your AI provider in{' '}
                       <Link to="/settings?section=ai" className="text-accent hover:text-accent-hover">
                         Settings
@@ -235,7 +235,7 @@ export default function AgentsPage() {
           <div ref={bottomRef} />
         </div>
 
-        <div className="px-4 py-3 border-t border-border bg-bg-secondary flex-shrink-0">
+        <div className="px-4 py-3 border-t border-border bg-card flex-shrink-0">
           <form
             onSubmit={(e: FormEvent) => { e.preventDefault(); handleSend() }}
             className="flex items-center gap-2"

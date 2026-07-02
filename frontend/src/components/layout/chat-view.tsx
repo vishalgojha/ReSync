@@ -17,7 +17,7 @@ export interface ChatViewProps {
 function statusColor(status: string | null): string {
   if (status === 'read' || status === 'played') return 'text-info'
   if (status === 'delivered') return 'text-success'
-  return 'text-text-muted'
+  return 'text-muted-foreground'
 }
 
 export default function ChatView({ chatId }: ChatViewProps) {
@@ -151,12 +151,12 @@ export default function ChatView({ chatId }: ChatViewProps) {
   const hasStatus = messages.some((m) => !!m.status)
 
   return (
-    <div className="flex h-screen flex-col bg-bg-primary">
-      <div className="flex shrink-0 items-center gap-3 border-b border-border bg-bg-secondary px-4 py-3">
-        <Avatar name={chatName} size="sm" />
+    <div className="flex h-screen flex-col bg-background">
+      <div className="flex shrink-0 items-center gap-3 border-b border-border bg-card px-4 py-3">
+        <Avatar name={chatName} className="size-8" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="truncate text-sm font-medium text-text-primary">{chatName}</span>
+            <span className="truncate text-sm font-medium text-foreground">{chatName}</span>
             {connectionState !== 'connected' && (
               <span className="text-xs text-warning">
                 {connectionState === 'connecting'
@@ -169,13 +169,13 @@ export default function ChatView({ chatId }: ChatViewProps) {
           </div>
         </div>
         <button
-          className="rounded-[var(--radius-md)] p-1.5 text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="rounded-[var(--radius-md)] p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           aria-label="Search in conversation"
         >
           <Search className="h-4 w-4" />
         </button>
         <button
-          className="rounded-[var(--radius-md)] p-1.5 text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="rounded-[var(--radius-md)] p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           aria-label="Toggle inspector"
         >
           <Info className="h-4 w-4" />
@@ -194,15 +194,15 @@ export default function ChatView({ chatId }: ChatViewProps) {
         )}
 
         {!loading && loadingMore && (
-          <div className="py-2 text-center text-xs text-text-muted">Loading older messages...</div>
+          <div className="py-2 text-center text-xs text-muted-foreground">Loading older messages...</div>
         )}
 
         {!loading && !hasMore && messages.length > 0 && (
-          <div className="py-2 text-center text-xs text-text-muted">Beginning of conversation</div>
+          <div className="py-2 text-center text-xs text-muted-foreground">Beginning of conversation</div>
         )}
 
         {!loading && messages.length === 0 && (
-          <div className="py-12 text-center text-sm text-text-muted">No messages yet</div>
+          <div className="py-12 text-center text-sm text-muted-foreground">No messages yet</div>
         )}
 
         {!loading &&
@@ -230,7 +230,7 @@ export default function ChatView({ chatId }: ChatViewProps) {
               <div key={msg.id}>
                 {showDateSep && msg.timestamp && (
                   <div className="flex justify-center py-3">
-                    <span className="rounded-full bg-bg-primary px-3 py-1 text-xs text-text-muted">
+                    <span className="rounded-full bg-background px-3 py-1 text-xs text-muted-foreground">
                       {formatDate(msg.timestamp)}
                     </span>
                   </div>
@@ -248,8 +248,8 @@ export default function ChatView({ chatId }: ChatViewProps) {
                         className={cn(
                           'mb-0.5 cursor-pointer rounded-t-lg border-l-2 p-1.5 text-xs',
                           fromMe
-                            ? 'border-accent bg-accent-muted'
-                            : 'border-border bg-bg-tertiary',
+                            ? 'border-accent bg-accent/10'
+                            : 'border-border bg-secondary',
                         )}
                         onClick={(e) => {
                           e.stopPropagation()
@@ -257,8 +257,8 @@ export default function ChatView({ chatId }: ChatViewProps) {
                           el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
                         }}
                       >
-                        <span className="text-[10px] text-text-muted">Reply to</span>
-                        <p className="truncate text-text-secondary">{msg.quotedText}</p>
+                        <span className="text-[10px] text-muted-foreground">Reply to</span>
+                        <p className="truncate text-muted-foreground">{msg.quotedText}</p>
                       </div>
                     )}
 
@@ -267,28 +267,28 @@ export default function ChatView({ chatId }: ChatViewProps) {
                       className={cn(
                         'rounded-lg px-3 py-2',
                         fromMe
-                          ? 'bg-accent-muted text-text-primary rounded-br-sm'
-                          : 'bg-bg-tertiary text-text-primary rounded-bl-sm',
+                          ? 'bg-accent/10 text-foreground rounded-br-sm'
+                          : 'bg-secondary text-foreground rounded-bl-sm',
                         isDeleted && 'italic opacity-60',
                       )}
                     >
                       {isDeleted ? (
-                        <p className="text-sm italic text-text-muted">This message was deleted</p>
+                        <p className="text-sm italic text-muted-foreground">This message was deleted</p>
                       ) : msg.messageType === 'locationMessage' ||
                         msg.messageType === 'liveLocationMessage' ? (
-                        <p className="text-sm text-text-primary">
+                        <p className="text-sm text-foreground">
                           {msg.textContent || (msg.messageType === 'liveLocationMessage' ? 'Live Location' : 'Location')}
                         </p>
                       ) : msg.messageType === 'contactMessage' ? (
-                        <p className="text-sm text-text-primary">
+                        <p className="text-sm text-foreground">
                           Contact Card{msg.textContent ? ` - ${msg.textContent}` : ''}
                         </p>
                       ) : msg.messageType === 'pollCreationMessage' ? (
-                        <p className="text-sm text-text-primary">
+                        <p className="text-sm text-foreground">
                           Poll: {msg.textContent || 'Poll'}
                         </p>
                       ) : msg.messageType === 'reactionMessage' ? (
-                        <p className="text-sm text-text-primary">{msg.textContent || 'Reacted'}</p>
+                        <p className="text-sm text-foreground">{msg.textContent || 'Reacted'}</p>
                       ) : isImage && mediaUrl ? (
                         <div className="-mx-3 -mt-2 mb-1 overflow-hidden rounded-t-lg">
                           <img
@@ -320,7 +320,7 @@ export default function ChatView({ chatId }: ChatViewProps) {
                             preload="none"
                           />
                           {msg.textContent && (
-                            <p className="mt-1 text-sm text-text-primary">{msg.textContent}</p>
+                            <p className="mt-1 text-sm text-foreground">{msg.textContent}</p>
                           )}
                         </div>
                       ) : isSticker && mediaUrl ? (
@@ -335,11 +335,11 @@ export default function ChatView({ chatId }: ChatViewProps) {
                       ) : isDocument && mediaUrl ? (
                         <div className="flex items-center gap-2 py-1">
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm text-text-primary">
+                            <p className="truncate text-sm text-foreground">
                               {msg.textContent || 'Document'}
                             </p>
                             {msg.mediaMimeType && (
-                              <p className="truncate text-[10px] text-text-muted">
+                              <p className="truncate text-[10px] text-muted-foreground">
                                 {msg.mediaMimeType}
                               </p>
                             )}
@@ -355,12 +355,12 @@ export default function ChatView({ chatId }: ChatViewProps) {
                           </a>
                         </div>
                       ) : isImage || isVideo || isAudio || isSticker || isDocument ? (
-                        <p className="text-sm text-text-primary">
+                        <p className="text-sm text-foreground">
                           {msgTypeLabel(msg.messageType)}
                           {msg.textContent ? `: ${msg.textContent}` : ''}
                         </p>
                       ) : (
-                        <p className="whitespace-pre-wrap break-words text-sm text-text-primary">
+                        <p className="whitespace-pre-wrap break-words text-sm text-foreground">
                           {msg.textContent}
                         </p>
                       )}
@@ -368,7 +368,7 @@ export default function ChatView({ chatId }: ChatViewProps) {
                       <div
                         className={cn(
                           'mt-1 flex items-center justify-end gap-1',
-                          fromMe ? 'text-text-muted' : 'text-text-muted',
+                          fromMe ? 'text-muted-foreground' : 'text-muted-foreground',
                         )}
                       >
                         <span className="text-[10px] leading-none">{formatTime(msg.timestamp)}</span>
@@ -389,25 +389,25 @@ export default function ChatView({ chatId }: ChatViewProps) {
       </div>
 
       {replyTo && (
-        <div className="flex shrink-0 items-center gap-2 border-t border-border bg-bg-secondary px-4 py-2">
+        <div className="flex shrink-0 items-center gap-2 border-t border-border bg-card px-4 py-2">
           <div className="min-w-0 flex-1">
             <p className="text-xs text-accent">
               Replying to {replyTo.fromMe ? 'yourself' : chatName}
             </p>
-            <p className="truncate text-sm text-text-muted">
+            <p className="truncate text-sm text-muted-foreground">
               {replyTo.textContent || msgTypeLabel(replyTo.messageType)}
             </p>
           </div>
           <button
             onClick={() => setReplyTo(null)}
-            className="text-sm text-text-muted transition-colors hover:text-text-primary"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             ✕
           </button>
         </div>
       )}
 
-      <div className="flex shrink-0 items-center gap-2 border-t border-border bg-bg-secondary px-4 py-3">
+      <div className="flex shrink-0 items-center gap-2 border-t border-border bg-card px-4 py-3">
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}

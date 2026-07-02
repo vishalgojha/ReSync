@@ -107,7 +107,7 @@ function AiSettingsSection() {
   return (
     <div className="space-y-5">
       <div>
-        <label className="text-sm text-text-secondary block mb-2">Provider</label>
+        <label className="text-sm text-muted-foreground block mb-2">Provider</label>
         <div className="flex flex-wrap gap-2">
           {PROVIDERS.map(p => (
             <Button
@@ -123,7 +123,7 @@ function AiSettingsSection() {
       </div>
 
       <div>
-        <label className="text-sm text-text-secondary block mb-1">API Key</label>
+        <label className="text-sm text-muted-foreground block mb-1">API Key</label>
         <Input
           type="password"
           value={apiKey}
@@ -133,7 +133,7 @@ function AiSettingsSection() {
       </div>
 
       <div>
-        <label className="text-sm text-text-secondary block mb-1">Model</label>
+        <label className="text-sm text-muted-foreground block mb-1">Model</label>
         <Input
           type="text"
           value={model}
@@ -144,7 +144,7 @@ function AiSettingsSection() {
 
       {showBaseUrl && (
         <div>
-          <label className="text-sm text-text-secondary block mb-1">
+          <label className="text-sm text-muted-foreground block mb-1">
             Base URL {kind === 'custom' && '(e.g. http://localhost:11434/v1)'}
           </label>
           <Input
@@ -166,7 +166,7 @@ function AiSettingsSection() {
       </div>
 
       {testResult && (
-        <Badge variant={testResult.ok ? 'success' : 'danger'} className="w-full justify-center py-2">
+        <Badge variant={testResult.ok ? 'default' : 'destructive'} className="w-full justify-center py-2">
           {testResult.message}
         </Badge>
       )}
@@ -180,14 +180,14 @@ function GeneralSection() {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm text-text-secondary block mb-1">Server URL</label>
-        <p className="text-text-primary text-sm font-mono bg-bg-secondary rounded-[var(--radius-md)] px-3 py-2 border border-border">
+        <label className="text-sm text-muted-foreground block mb-1">Server URL</label>
+        <p className="text-foreground text-sm font-mono bg-card rounded-[var(--radius-md)] px-3 py-2 border border-border">
           {serverUrl}
         </p>
       </div>
       <div>
-        <label className="text-sm text-text-secondary block mb-1">Status</label>
-        <Badge variant="success">Running</Badge>
+        <label className="text-sm text-muted-foreground block mb-1">Status</label>
+        <Badge variant="default">Running</Badge>
       </div>
     </div>
   )
@@ -199,14 +199,14 @@ function WhatsAppSection() {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm text-text-secondary block mb-1">Connection</label>
+        <label className="text-sm text-muted-foreground block mb-1">Connection</label>
         <Badge
           variant={
             connectionState === 'connected' || connectionState === 'syncing'
-              ? 'success'
+              ? 'default'
               : connectionState === 'connecting' || connectionState === 'qr'
-                ? 'warning'
-                : 'danger'
+                ? 'secondary'
+                : 'destructive'
           }
         >
           {connectionState}
@@ -216,7 +216,7 @@ function WhatsAppSection() {
         <Button onClick={connect}>Connect</Button>
       )}
       {(connectionState === 'connected' || connectionState === 'syncing') && (
-        <Button variant="danger" onClick={disconnect}>Disconnect</Button>
+        <Button variant="destructive" onClick={disconnect}>Disconnect</Button>
       )}
     </div>
   )
@@ -235,11 +235,11 @@ function PluginsSection() {
   return (
     <div className="space-y-3">
       {plugins.length === 0 ? (
-        <p className="text-sm text-text-muted">No plugins available</p>
+        <p className="text-sm text-muted-foreground">No plugins available</p>
       ) : (
         plugins.map(p => (
           <div key={p} className="flex items-center justify-between py-2">
-            <span className="text-sm text-text-primary capitalize">{p}</span>
+            <span className="text-sm text-foreground capitalize">{p}</span>
             <Badge variant="default">active</Badge>
           </div>
         ))
@@ -252,16 +252,16 @@ function AboutSection() {
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-2xl font-bold text-text-primary">ReSync</p>
-        <p className="text-sm text-text-secondary mt-1">WhatsApp Web Client</p>
+        <p className="text-2xl font-bold text-foreground">ReSync</p>
+        <p className="text-sm text-muted-foreground mt-1">WhatsApp Web Client</p>
       </div>
       <Separator />
       <div>
-        <label className="text-sm text-text-secondary block mb-1">Version</label>
-        <p className="text-text-primary text-sm">0.1.0</p>
+        <label className="text-sm text-muted-foreground block mb-1">Version</label>
+        <p className="text-foreground text-sm">0.1.0</p>
       </div>
       <div>
-        <label className="text-sm text-text-secondary block mb-1">Links</label>
+        <label className="text-sm text-muted-foreground block mb-1">Links</label>
         <div className="space-y-1">
           <a
             href="https://github.com/your-org/resync"
@@ -306,7 +306,7 @@ export default function SettingsPage() {
   const ActiveComponent = SECTION_COMPONENTS[activeSection] || GeneralSection
 
   return (
-    <div className="flex h-screen bg-bg-primary">
+    <div className="flex h-screen bg-background">
       <Sidebar />
       <div className="flex flex-1 overflow-hidden">
         <nav className="w-48 border-r border-border flex-shrink-0 pt-4 px-2 space-y-1">
@@ -319,8 +319,8 @@ export default function SettingsPage() {
                 className={cn(
                   'w-full flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] text-sm transition-colors text-left',
                   activeSection === s.id
-                    ? 'bg-accent-muted text-accent'
-                    : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary',
+                    ? 'bg-accent/10 text-accent'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" />

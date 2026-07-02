@@ -3,10 +3,10 @@ import { API_BASE } from '../config'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { EmptyState } from '../components/ui/empty-state'
-import { Dialog } from '../components/ui/dialog'
+import { Dialog, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog'
 import { Separator } from '../components/ui/separator'
 import { Skeleton } from '../components/ui/skeleton'
-import { useToast } from '../components/ui/toast'
+import { toast } from 'sonner'
 import { Zap, Plus, Play, Download, Upload, Trash2, Edit3, Clock } from 'lucide-react'
 import Sidebar from '../components/layout/sidebar'
 
@@ -68,11 +68,11 @@ const TRIGGER_LABELS: Record<string, string> = {
   'action.failed': 'Action Failed',
 }
 
-const STATUS_COLORS: Record<string, 'success' | 'danger' | 'warning' | 'default'> = {
-  completed: 'success',
-  failed: 'danger',
-  running: 'warning',
-  partial: 'warning',
+const STATUS_COLORS: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  completed: 'default',
+  failed: 'destructive',
+  running: 'secondary',
+  partial: 'secondary',
 }
 
 function safeParse(s: string): Record<string, unknown> {
@@ -100,8 +100,6 @@ export default function AutomationsPage() {
     conditions: [],
     actions: [],
   })
-  const { addToast } = useToast()
-
   const load = useCallback(() => {
     setFetching(true)
     Promise.all([
@@ -117,10 +115,10 @@ export default function AutomationsPage() {
         setAvailableActions(actionData.actions || [])
       })
       .catch(() => {
-        addToast({ message: 'Failed to load automations', type: 'danger' })
+        toast.error('Failed to load automations')
       })
       .finally(() => setFetching(false))
-  }, [addToast])
+  }, [])
 
   useEffect(() => { load() }, [load])
 
@@ -136,7 +134,7 @@ export default function AutomationsPage() {
   const deleteAuto = async (id: string) => {
     await fetch(`${API_BASE}/api/automations/${id}`, { method: 'DELETE' })
     setDeleteConfirm(null)
-    addToast({ message: 'Automation deleted', type: 'success' })
+    toast.success('Automation deleted')
     load()
   }
 
@@ -146,7 +144,7 @@ export default function AutomationsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ triggerData: { manual: true } }),
     })
-    addToast({ message: 'Automation triggered', type: 'success' })
+    toast.success('Automation triggered')
     loadExecutions(id)
   }
 
@@ -193,7 +191,7 @@ export default function AutomationsPage() {
     })
     setShowImport(false)
     setImportYaml('')
-    addToast({ message: 'Automation imported', type: 'success' })
+    toast.success('Automation imported')
     load()
   }
 
@@ -244,49 +242,49 @@ export default function AutomationsPage() {
       })
     }
     setShowEditor(false)
-    addToast({ message: editingId ? 'Automation updated' : 'Automation created', type: 'success' })
+    toast.success(editingId ? 'Automation updated' : 'Automation created')
     load()
   }
 
   if (showEditor) {
     return (
-      <div className="flex h-screen bg-bg-primary">
+      <div className="flex h-screen bg-background">
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-bg-secondary flex-shrink-0">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card flex-shrink-0">
             <Button variant="ghost" size="icon" onClick={() => setShowEditor(false)}>
               <Edit3 className="h-4 w-4" />
             </Button>
-            <h1 className="text-lg font-semibold text-text-primary">
+            <h1 className="text-lg font-semibold text-foreground">
               {editingId ? 'Edit Automation' : 'New Automation'}
             </h1>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
             <div className="max-w-2xl space-y-5">
               <div>
-                <label className="text-sm text-text-secondary block mb-1">Name</label>
+                <label className="text-sm text-muted-foreground block mb-1">Name</label>
                 <input
                   value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
-                  className="flex h-9 w-full rounded-[var(--radius-md)] border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-sm transition-colors placeholder:text-text-muted focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring"
+                  className="flex h-9 w-full rounded-[var(--radius-md)] border border-border bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30"
                   placeholder="Automation name"
                 />
               </div>
               <div>
-                <label className="text-sm text-text-secondary block mb-1">Description</label>
+                <label className="text-sm text-muted-foreground block mb-1">Description</label>
                 <input
                   value={form.description}
                   onChange={e => setForm({ ...form, description: e.target.value })}
-                  className="flex h-9 w-full rounded-[var(--radius-md)] border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-sm transition-colors placeholder:text-text-muted focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring"
+                  className="flex h-9 w-full rounded-[var(--radius-md)] border border-border bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30"
                   placeholder="Optional description"
                 />
               </div>
               <div>
-                <label className="text-sm text-text-secondary block mb-2">Trigger</label>
+                <label className="text-sm text-muted-foreground block mb-2">Trigger</label>
                 <select
                   value={form.triggerEvent}
                   onChange={e => setForm({ ...form, triggerEvent: e.target.value })}
-                  className="flex h-9 w-full rounded-[var(--radius-md)] border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-sm transition-colors focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring"
+                  className="flex h-9 w-full rounded-[var(--radius-md)] border border-border bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30"
                 >
                   {availableTriggers.map(t => (
                     <option key={t} value={t}>{TRIGGER_LABELS[t] || t}</option>
@@ -295,7 +293,7 @@ export default function AutomationsPage() {
               </div>
               <Separator />
               <div>
-                <label className="text-sm text-text-secondary block mb-2">Conditions</label>
+                <label className="text-sm text-muted-foreground block mb-2">Conditions</label>
                 {form.conditions.map((c, i) => (
                   <div key={i} className="flex gap-2 mb-2 items-start">
                     <select
@@ -305,7 +303,7 @@ export default function AutomationsPage() {
                         upd[i] = { ...upd[i], type: e.target.value }
                         setForm({ ...form, conditions: upd })
                       }}
-                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-sm transition-colors focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring flex-1"
+                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30 flex-1"
                     >
                       {availableConditions.map(ac => (
                         <option key={ac} value={ac}>{ac}</option>
@@ -319,7 +317,7 @@ export default function AutomationsPage() {
                         setForm({ ...form, conditions: upd })
                       }}
                       placeholder='{"text":"hello"}'
-                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-sm transition-colors placeholder:text-text-muted focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring flex-1"
+                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30 flex-1"
                     />
                     <Button
                       variant="ghost"
@@ -343,7 +341,7 @@ export default function AutomationsPage() {
               </div>
               <Separator />
               <div>
-                <label className="text-sm text-text-secondary block mb-2">Actions</label>
+                <label className="text-sm text-muted-foreground block mb-2">Actions</label>
                 {form.actions.map((a, i) => (
                   <div key={i} className="flex gap-2 mb-2 items-start">
                     <select
@@ -353,7 +351,7 @@ export default function AutomationsPage() {
                         upd[i] = { ...upd[i], actionId: e.target.value }
                         setForm({ ...form, actions: upd })
                       }}
-                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-sm transition-colors focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring flex-1"
+                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30 flex-1"
                     >
                       {availableActions.map(aa => (
                         <option key={aa.id} value={aa.id}>{aa.name}</option>
@@ -367,9 +365,9 @@ export default function AutomationsPage() {
                         setForm({ ...form, actions: upd })
                       }}
                       placeholder='{"text":"Hi"}'
-                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-sm transition-colors placeholder:text-text-muted focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring flex-[2]"
+                      className="flex h-9 rounded-[var(--radius-md)] border border-border bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30 flex-[2]"
                     />
-                    <label className="flex items-center gap-1 text-xs text-text-muted shrink-0 cursor-pointer">
+                    <label className="flex items-center gap-1 text-xs text-muted-foreground shrink-0 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={a.continueOnError}
@@ -418,13 +416,13 @@ export default function AutomationsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-bg-primary">
+    <div className="flex h-screen bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-secondary flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card flex-shrink-0">
           <div className="flex items-center gap-3">
-            <Zap className="h-5 w-5 text-text-primary" />
-            <h1 className="text-lg font-semibold text-text-primary">Automations</h1>
+            <Zap className="h-5 w-5 text-foreground" />
+            <h1 className="text-lg font-semibold text-foreground">Automations</h1>
           </div>
           <div className="flex gap-2">
             <Button variant="secondary" size="sm" onClick={() => setShowImport(true)}>
@@ -439,11 +437,11 @@ export default function AutomationsPage() {
         </div>
 
         {showImport && (
-          <div className="border-b border-border p-4 space-y-2 bg-bg-secondary">
+          <div className="border-b border-border p-4 space-y-2 bg-card">
             <textarea
               value={importYaml}
               onChange={e => setImportYaml(e.target.value)}
-              className="w-full h-32 rounded-[var(--radius-md)] border border-border bg-bg-primary px-3 py-2 text-sm text-text-primary font-mono placeholder:text-text-muted focus-visible:border-border-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-ring"
+              className="w-full h-32 rounded-[var(--radius-md)] border border-border bg-background px-3 py-2 text-sm text-foreground font-mono placeholder:text-muted-foreground focus-visible:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring-primary/30"
               placeholder="Paste YAML..."
             />
             <div className="flex gap-2">
@@ -492,18 +490,18 @@ export default function AutomationsPage() {
             automations.map(auto => (
               <div
                 key={auto.id}
-                className="rounded-[var(--radius-lg)] border border-border bg-bg-secondary p-4"
+                className="rounded-[var(--radius-lg)] border border-border bg-card p-4"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-text-primary font-medium text-sm">{auto.name || 'Unnamed'}</h3>
+                      <h3 className="text-foreground font-medium text-sm">{auto.name || 'Unnamed'}</h3>
                       <Badge variant="default">
                         {TRIGGER_LABELS[auto.trigger.event] || auto.trigger.event}
                       </Badge>
                     </div>
                     {auto.description && (
-                      <p className="text-text-muted text-xs mt-0.5">{auto.description}</p>
+                      <p className="text-muted-foreground text-xs mt-0.5">{auto.description}</p>
                     )}
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer shrink-0 ml-3">
@@ -513,7 +511,7 @@ export default function AutomationsPage() {
                       onChange={e => toggleEnabled(auto.id, e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-9 h-5 bg-bg-tertiary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent" />
+                    <div className="w-9 h-5 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent" />
                   </label>
                 </div>
 
@@ -527,7 +525,7 @@ export default function AutomationsPage() {
 
                 <div className="mt-2 flex flex-wrap gap-1">
                   {auto.actions.map((a, i) => (
-                    <Badge key={i} variant="info">{a.actionId}</Badge>
+                    <Badge key={i} variant="default">{a.actionId}</Badge>
                   ))}
                 </div>
 
@@ -567,8 +565,8 @@ export default function AutomationsPage() {
                           <Badge variant={STATUS_COLORS[ex.status] || 'default'} className="capitalize">
                             {ex.status}
                           </Badge>
-                          <span className="text-text-muted">{ex.triggerEvent}</span>
-                          <span className="text-text-muted">
+                          <span className="text-muted-foreground">{ex.triggerEvent}</span>
+                          <span className="text-muted-foreground">
                             {new Date(ex.startedAt * 1000).toLocaleString()}
                           </span>
                         </div>
@@ -583,21 +581,21 @@ export default function AutomationsPage() {
                       </div>
                     ))}
                     {logs[showExecutions!] && (
-                      <div className="mt-2 bg-bg-primary rounded-[var(--radius-md)] p-2 space-y-1 max-h-40 overflow-y-auto">
+                      <div className="mt-2 bg-background rounded-[var(--radius-md)] p-2 space-y-1 max-h-40 overflow-y-auto">
                         {logs[showExecutions!]!.map(log => (
                           <div key={log.id} className="flex items-center gap-2 text-xs">
                             <Badge
-                              variant={log.status === 'success' ? 'success' : 'danger'}
+                              variant={log.status === 'success' ? 'default' : 'destructive'}
                               className="w-12 shrink-0 justify-center"
                             >
                               {log.status}
                             </Badge>
-                            <span className="text-text-muted w-12 shrink-0">{log.type}</span>
+                            <span className="text-muted-foreground w-12 shrink-0">{log.type}</span>
                             {log.actionId && (
-                              <span className="text-text-primary">{log.actionId}</span>
+                              <span className="text-foreground">{log.actionId}</span>
                             )}
                             {log.message && (
-                              <span className="text-text-muted truncate">{log.message}</span>
+                              <span className="text-muted-foreground truncate">{log.message}</span>
                             )}
                           </div>
                         ))}
@@ -613,15 +611,17 @@ export default function AutomationsPage() {
         <Dialog
           open={!!deleteConfirm}
           onOpenChange={() => setDeleteConfirm(null)}
-          title="Delete Automation"
-          description="Are you sure you want to delete this automation? This action cannot be undone."
         >
+          <DialogHeader>
+            <DialogTitle>Delete Automation</DialogTitle>
+            <DialogDescription>Are you sure you want to delete this automation? This action cannot be undone.</DialogDescription>
+          </DialogHeader>
           <div className="flex justify-end gap-2 mt-4">
             <Button variant="secondary" onClick={() => setDeleteConfirm(null)}>
               Cancel
             </Button>
             <Button
-              variant="danger"
+              variant="destructive"
               onClick={() => deleteConfirm && deleteAuto(deleteConfirm)}
             >
               Delete

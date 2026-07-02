@@ -55,9 +55,9 @@ export default function ChatList({ onSelectChat }: ChatListProps) {
 
   if (chats.length === 0 && isDisconnected) {
     return (
-      <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-bg-secondary">
+      <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-card">
         <div className="flex items-center justify-between px-4 py-3">
-          <h1 className="text-lg font-semibold text-text-primary">Chats</h1>
+          <h1 className="text-lg font-semibold text-foreground">Chats</h1>
         </div>
         <EmptyState
           icon={<MessageSquare className="h-8 w-8" />}
@@ -72,9 +72,9 @@ export default function ChatList({ onSelectChat }: ChatListProps) {
 
   if (chats.length === 0 && isSyncing) {
     return (
-      <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-bg-secondary">
+      <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-card">
         <div className="flex items-center justify-between px-4 py-3">
-          <h1 className="text-lg font-semibold text-text-primary">Chats</h1>
+          <h1 className="text-lg font-semibold text-foreground">Chats</h1>
         </div>
         <EmptyState
           icon={<MessageSquare className="h-8 w-8" />}
@@ -88,9 +88,9 @@ export default function ChatList({ onSelectChat }: ChatListProps) {
 
   if (chats.length === 0) {
     return (
-      <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-bg-secondary">
+      <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-card">
         <div className="flex items-center justify-between px-4 py-3">
-          <h1 className="text-lg font-semibold text-text-primary">Chats</h1>
+          <h1 className="text-lg font-semibold text-foreground">Chats</h1>
         </div>
         <EmptyState
           icon={<MessageSquare className="h-8 w-8" />}
@@ -102,13 +102,13 @@ export default function ChatList({ onSelectChat }: ChatListProps) {
   }
 
   return (
-    <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-bg-secondary">
+    <div className="flex min-w-[320px] max-w-[420px] flex-1 flex-col border-r border-border bg-card">
       <div className="flex items-center justify-between px-4 py-3">
-        <h1 className="text-lg font-semibold text-text-primary">Chats</h1>
+        <h1 className="text-lg font-semibold text-foreground">Chats</h1>
       </div>
 
       <div className="relative px-3 pb-2">
-        <Search className="absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+        <Search className="absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           ref={searchRef}
           value={query}
@@ -122,8 +122,8 @@ export default function ChatList({ onSelectChat }: ChatListProps) {
         {pinned.length > 0 && (
           <div>
             <div className="flex items-center gap-1.5 px-4 py-1.5">
-              <Star className="h-3 w-3 text-text-muted" />
-              <span className="text-[11px] font-medium uppercase tracking-wider text-text-muted">Pinned</span>
+              <Star className="h-3 w-3 text-muted-foreground" />
+              <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Pinned</span>
             </div>
             {pinned.map((chat) => (
               <ChatRow key={chat.id} chat={chat} onSelect={onSelectChat} />
@@ -135,8 +135,8 @@ export default function ChatList({ onSelectChat }: ChatListProps) {
           <div>
             {pinned.length > 0 && (
               <div className="flex items-center gap-1.5 px-4 py-1.5">
-                <MessageSquare className="h-3 w-3 text-text-muted" />
-                <span className="text-[11px] font-medium uppercase tracking-wider text-text-muted">All Chats</span>
+                <MessageSquare className="h-3 w-3 text-muted-foreground" />
+                <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">All Chats</span>
               </div>
             )}
             {regular.map((chat) => (
@@ -148,8 +148,8 @@ export default function ChatList({ onSelectChat }: ChatListProps) {
         {archived.length > 0 && (
           <div>
             <div className="flex items-center gap-1.5 px-4 py-1.5">
-              <Archive className="h-3 w-3 text-text-muted" />
-              <span className="text-[11px] font-medium uppercase tracking-wider text-text-muted">Archived</span>
+              <Archive className="h-3 w-3 text-muted-foreground" />
+              <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Archived</span>
             </div>
             {archived.map((chat) => (
               <ChatRow key={chat.id} chat={chat} onSelect={onSelectChat} />
@@ -178,27 +178,27 @@ function ChatRow({ chat, onSelect }: ChatRowProps) {
   return (
     <button
       onClick={() => onSelect(chat.id)}
-      className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-bg-hover"
+      className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-secondary"
     >
-      <Avatar name={chat.name} size="md" />
+      <Avatar name={chat.name} className="size-10" />
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between">
-          <span className="truncate text-sm font-medium text-text-primary">{chat.name}</span>
-          <span className="ml-2 shrink-0 text-xs text-text-muted">
+          <span className="truncate text-sm font-medium text-foreground">{chat.name}</span>
+          <span className="ml-2 shrink-0 text-xs text-muted-foreground">
             {formatTime(chat.lastMessageTimestamp)}
           </span>
         </div>
         <div className="mt-0.5 flex items-center justify-between">
-          <span className="truncate text-sm text-text-secondary">
+          <span className="truncate text-sm text-muted-foreground">
             {chat.lastMessageFromMe && (
-              <span className="mr-0.5 text-text-muted">You: </span>
+              <span className="mr-0.5 text-muted-foreground">You: </span>
             )}
             {messagePreview(chat.lastMessage, chat.lastMessageType, chat.lastMessageFromMe)}
           </span>
           {chat.unreadCount ? (
             <span
               className={cn(
-                'ml-2 shrink-0 rounded-full bg-accent px-1.5 py-0.5 text-center text-xs font-medium text-text-accent',
+                'ml-2 shrink-0 rounded-full bg-accent px-1.5 py-0.5 text-center text-xs font-medium text-primary-foreground',
                 'min-w-[18px]',
               )}
             >

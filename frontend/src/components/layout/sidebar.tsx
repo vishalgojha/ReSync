@@ -1,69 +1,67 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { MessageSquare, Zap, Bot, Settings, Power } from 'lucide-react'
+import {
+  MessageSquare,
+  Zap,
+  Bot,
+  Settings,
+  Wifi,
+  WifiOff,
+  User,
+  LogOut,
+} from 'lucide-react'
 import { useApp } from '../../lib/app-context'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '../ui/tooltip'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu'
 import type { ConnectionState } from '../../lib/types'
 
 const NAV_ITEMS = [
   { path: '/', label: 'Messages', icon: MessageSquare },
   { path: '/automations', label: 'Automations', icon: Zap },
   { path: '/agents', label: 'Agents', icon: Bot },
-  { path: '/settings', label: 'Settings', icon: Settings },
 ]
 
 function connectionDot(state: ConnectionState): string {
   switch (state) {
     case 'connected':
     case 'syncing':
-      return 'bg-success'
+      return 'bg-green-500'
     case 'connecting':
     case 'qr':
-      return 'bg-warning'
+      return 'bg-amber-500'
     case 'disconnected':
     case 'logged_out':
     case 'error':
-      return 'bg-danger'
-  }
-}
-
-function connectionLabel(state: ConnectionState): string {
-  switch (state) {
-    case 'connected':
-      return 'Connected'
-    case 'syncing':
-      return 'Syncing...'
-    case 'connecting':
-      return 'Connecting...'
-    case 'qr':
-      return 'QR Ready'
-    case 'disconnected':
-      return 'Disconnected'
-    case 'logged_out':
-      return 'Logged Out'
-    case 'error':
-      return 'Error'
+      return 'bg-red-500'
   }
 }
 
 export default function Sidebar() {
-  const { connectionState, disconnect } = useApp()
+  const { connectionState, connect, disconnect } = useApp()
   const navigate = useNavigate()
   const location = useLocation()
 
+  const isConnected = connectionState === 'connected' || connectionState === 'syncing'
+
   return (
-    <aside className="flex h-screen w-[220px] shrink-0 flex-col border-r border-border bg-bg-sidebar">
-      <div className="flex items-center gap-2 px-4 py-4">
-        <div className="flex h-7 w-7 items-center justify-center rounded-[var(--radius-md)] bg-accent text-xs font-bold text-text-accent">
-          R
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold text-text-primary">ReSync</span>
-          <span className="text-[10px] text-text-muted">v0.1.0</span>
-        </div>
+    <div className="w-[72px] bg-sidebar border-r border-sidebar-border flex flex-col items-center py-4 gap-4 flex-shrink-0">
+      {/* Logo */}
+      <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-accent-foreground font-bold text-sm">
+        R
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-2 py-2">
+      {/* Navigation Items */}
+      <div className="flex-1 flex flex-col items-center gap-2">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon
           const isActive =
@@ -72,38 +70,99 @@ export default function Sidebar() {
               : location.pathname.startsWith(item.path)
 
           return (
-            <button
-              key={item.path}
-              onClick={() => navigate(item.path)}
-              className={cn(
-                'flex w-full items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 text-sm transition-colors',
-                isActive
-                  ? 'bg-bg-active text-text-primary'
-                  : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary',
-              )}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span>{item.label}</span>
-            </button>
+            <Tooltip key={item.path}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={isActive ? 'default' : 'ghost'}
+                  size="icon"
+                  className="w-10 h-10 rounded-lg"
+                  onClick={() => navigate(item.path)}
+                >
+                  <Icon className="w-5 h-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="ml-2">
+                {item.label}
+              </TooltipContent>
+            </Tooltip>
           )
         })}
-      </nav>
-
-      <div className="border-t border-border px-3 py-3">
-        <div className="mb-3 flex items-center gap-2 px-1">
-          <span className={cn('inline-block h-2 w-2 rounded-full', connectionDot(connectionState))} />
-          <span className="text-xs text-text-secondary">{connectionLabel(connectionState)}</span>
-        </div>
-        <Button
-          onClick={disconnect}
-          variant="secondary"
-          size="sm"
-          className="w-full"
-        >
-          <Power className="h-3.5 w-3.5" />
-          Disconnect
-        </Button>
       </div>
-    </aside>
+
+      {/* Bottom Section */}
+      <div className="flex flex-col items-center gap-2 pt-4 border-t border-sidebar-border w-full px-4">
+        {/* Connection Status */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-10 h-10 rounded-lg relative"
+              onClick={() => isConnected ? disconnect() : connect()}
+            >
+              {isConnected ? (
+                <Wifi className="w-5 h-5 text-green-500" />
+              ) : (
+                <WifiOff className="w-5 h-5 text-red-500" />
+              )}
+              <span className={cn(
+                'absolute bottom-1.5 right-1.5 w-2 h-2 rounded-full ring-1 ring-sidebar',
+                connectionDot(connectionState)
+              )} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="ml-2">
+            {isConnected ? 'Connected' : 'Disconnected'}
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Settings */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={location.pathname === '/settings' ? 'default' : 'ghost'}
+              size="icon"
+              className="w-10 h-10 rounded-lg"
+              onClick={() => navigate('/settings')}
+            >
+              <Settings className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="ml-2">
+            Settings
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Profile Menu */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-10 h-10 rounded-lg"
+                >
+                  <User className="w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="end" className="w-48">
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Preferences
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={disconnect} className="text-destructive">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Disconnect
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="ml-2">
+            Profile
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </div>
   )
 }

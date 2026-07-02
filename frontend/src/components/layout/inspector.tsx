@@ -210,17 +210,17 @@ export default function Inspector({ chatId, onClose }: InspectorProps) {
   const chatName = data ? findChatName(data.participants) : 'Conversation'
 
   return (
-    <div className="flex w-80 shrink-0 flex-col border-l border-border bg-bg-secondary">
+    <div className="flex w-80 shrink-0 flex-col border-l border-border bg-card">
       <div className="flex shrink-0 items-center justify-between border-b border-border px-4 py-3">
         <div className="flex min-w-0 items-center gap-2">
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-bg-tertiary text-[10px] font-medium text-text-secondary">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-[10px] font-medium text-muted-foreground">
             {getInitials(chatName)}
           </div>
-          <span className="truncate text-sm font-medium text-text-primary">{chatName}</span>
+          <span className="truncate text-sm font-medium text-foreground">{chatName}</span>
         </div>
         <button
           onClick={onClose}
-          className="rounded-[var(--radius-sm)] p-1 text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="rounded-[var(--radius-sm)] p-1 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
         >
           ✕
         </button>
@@ -236,8 +236,8 @@ export default function Inspector({ chatId, onClose }: InspectorProps) {
               className={cn(
                 'flex items-center gap-1 rounded-[var(--radius-sm)] px-2 py-1 text-xs transition-colors',
                 activeTab === tab.id
-                  ? 'bg-bg-active text-text-primary'
-                  : 'text-text-muted hover:bg-bg-hover hover:text-text-secondary',
+                  ? 'bg-accent/20 text-foreground'
+                  : 'text-muted-foreground hover:bg-secondary hover:text-muted-foreground',
               )}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -290,7 +290,7 @@ interface OverviewTabProps {
 function OverviewTab({ data, state }: OverviewTabProps) {
   if (!state || !data) {
     return (
-      <p className="py-8 text-center text-xs text-text-muted">
+      <p className="py-8 text-center text-xs text-muted-foreground">
         No conversation data yet. Send or receive a message to start building intelligence.
       </p>
     )
@@ -300,16 +300,16 @@ function OverviewTab({ data, state }: OverviewTabProps) {
 
   return (
     <div className="space-y-3">
-      <div className="rounded-[var(--radius-md)] bg-bg-tertiary p-3">
-        <h3 className="mb-1 text-[10px] font-medium uppercase tracking-wider text-text-muted">
+      <div className="rounded-[var(--radius-md)] bg-secondary p-3">
+        <h3 className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
           Conversation
         </h3>
-        <p className="text-sm text-text-primary">{name}</p>
+        <p className="text-sm text-foreground">{name}</p>
         <div className="mt-1 flex items-center gap-2">
           <span className={cn('text-base font-semibold', healthColor(state.health_score))}>
             {healthLabel(state.health_score)}
           </span>
-          <span className="text-[10px] text-text-muted">Health</span>
+          <span className="text-[10px] text-muted-foreground">Health</span>
         </div>
       </div>
 
@@ -324,24 +324,24 @@ function OverviewTab({ data, state }: OverviewTabProps) {
       </div>
 
       {state.last_message_at && (
-        <div className="rounded-[var(--radius-md)] bg-bg-tertiary p-3">
-          <p className="mb-0.5 text-[10px] text-text-muted">Last Message</p>
-          <p className="truncate text-sm text-text-primary">
+        <div className="rounded-[var(--radius-md)] bg-secondary p-3">
+          <p className="mb-0.5 text-[10px] text-muted-foreground">Last Message</p>
+          <p className="truncate text-sm text-foreground">
             {state.last_message_from_me ? 'You: ' : ''}
             {state.last_message_text || 'Media'}
           </p>
-          <p className="mt-0.5 text-[10px] text-text-muted">{formatTime(state.last_message_at)}</p>
+          <p className="mt-0.5 text-[10px] text-muted-foreground">{formatTime(state.last_message_at)}</p>
         </div>
       )}
 
       {state.first_message_at && (
-        <div className="rounded-[var(--radius-md)] bg-bg-tertiary p-3">
-          <p className="mb-0.5 text-[10px] text-text-muted">First Message</p>
-          <p className="truncate text-sm text-text-primary">
+        <div className="rounded-[var(--radius-md)] bg-secondary p-3">
+          <p className="mb-0.5 text-[10px] text-muted-foreground">First Message</p>
+          <p className="truncate text-sm text-foreground">
             {state.first_message_from_me ? 'You: ' : ''}
             {state.first_message_text || 'Media'}
           </p>
-          <p className="mt-0.5 text-[10px] text-text-muted">{formatTime(state.first_message_at)}</p>
+          <p className="mt-0.5 text-[10px] text-muted-foreground">{formatTime(state.first_message_at)}</p>
         </div>
       )}
     </div>
@@ -350,9 +350,9 @@ function OverviewTab({ data, state }: OverviewTabProps) {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[var(--radius-md)] bg-bg-tertiary p-3">
-      <p className="text-[10px] text-text-muted">{label}</p>
-      <p className="text-base font-semibold text-text-primary">{value}</p>
+    <div className="rounded-[var(--radius-md)] bg-secondary p-3">
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+      <p className="text-base font-semibold text-foreground">{value}</p>
     </div>
   )
 }
@@ -363,7 +363,7 @@ interface TimelineTabProps {
 
 function TimelineTab({ events }: TimelineTabProps) {
   if (events.length === 0) {
-    return <p className="py-8 text-center text-xs text-text-muted">No timeline events yet.</p>
+    return <p className="py-8 text-center text-xs text-muted-foreground">No timeline events yet.</p>
   }
 
   const iconMap: Record<string, string> = {
@@ -384,8 +384,8 @@ function TimelineTab({ events }: TimelineTabProps) {
         <div key={event.id} className="flex items-start gap-2 py-1.5">
           <span className="mt-0.5 shrink-0 text-sm">{iconMap[event.event_type] || '📝'}</span>
           <div className="min-w-0">
-            <p className="text-xs text-text-secondary">{event.description || event.label}</p>
-            <p className="text-[10px] text-text-muted">{formatTime(event.created_at)}</p>
+            <p className="text-xs text-muted-foreground">{event.description || event.label}</p>
+            <p className="text-[10px] text-muted-foreground">{formatTime(event.created_at)}</p>
           </div>
         </div>
       ))}
@@ -399,7 +399,7 @@ interface StatsTabProps {
 
 function StatsTab({ state }: StatsTabProps) {
   if (!state) {
-    return <p className="py-8 text-center text-xs text-text-muted">No statistics yet.</p>
+    return <p className="py-8 text-center text-xs text-muted-foreground">No statistics yet.</p>
   }
 
   const firstMsg = state.first_message_at
@@ -449,8 +449,8 @@ function StatsTab({ state }: StatsTabProps) {
 function StatRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-1">
-      <span className="text-xs text-text-muted">{label}</span>
-      <span className="text-xs font-medium text-text-primary">{value}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-xs font-medium text-foreground">{value}</span>
     </div>
   )
 }
@@ -461,19 +461,19 @@ interface FactsTabProps {
 
 function FactsTab({ facts }: FactsTabProps) {
   if (facts.length === 0) {
-    return <p className="py-8 text-center text-xs text-text-muted">No facts recorded yet.</p>
+    return <p className="py-8 text-center text-xs text-muted-foreground">No facts recorded yet.</p>
   }
 
   return (
     <div className="space-y-2">
       {facts.map((fact) => (
-        <div key={fact.id} className="rounded-[var(--radius-md)] bg-bg-tertiary p-2.5">
-          <p className="text-sm text-text-primary">{fact.value}</p>
+        <div key={fact.id} className="rounded-[var(--radius-md)] bg-secondary p-2.5">
+          <p className="text-sm text-foreground">{fact.value}</p>
           <div className="mt-1 flex items-center gap-2">
             {fact.source && (
-              <span className="text-[10px] text-text-muted">via {fact.source}</span>
+              <span className="text-[10px] text-muted-foreground">via {fact.source}</span>
             )}
-            <span className="text-[10px] text-text-muted">{formatTime(fact.created_at)}</span>
+            <span className="text-[10px] text-muted-foreground">{formatTime(fact.created_at)}</span>
           </div>
         </div>
       ))}
@@ -487,19 +487,19 @@ interface ParticipantsTabProps {
 
 function ParticipantsTab({ participants }: ParticipantsTabProps) {
   if (participants.length === 0) {
-    return <p className="py-8 text-center text-xs text-text-muted">No participants identified.</p>
+    return <p className="py-8 text-center text-xs text-muted-foreground">No participants identified.</p>
   }
 
   return (
     <div className="space-y-1">
       {participants.map((p) => (
         <div key={p.jid} className="flex items-center gap-2 py-1.5">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-bg-tertiary text-[10px] font-medium text-text-secondary">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-[10px] font-medium text-muted-foreground">
             {getInitials(p.name)}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm text-text-primary">{p.name}</p>
-            <p className="truncate text-[10px] text-text-muted">{p.jid.split('@')[0]}</p>
+            <p className="truncate text-sm text-foreground">{p.name}</p>
+            <p className="truncate text-[10px] text-muted-foreground">{p.jid.split('@')[0]}</p>
           </div>
         </div>
       ))}
@@ -513,7 +513,7 @@ interface FilesTabProps {
 
 function FilesTab({ files }: FilesTabProps) {
   if (files.length === 0) {
-    return <p className="py-8 text-center text-xs text-text-muted">No files shared yet.</p>
+    return <p className="py-8 text-center text-xs text-muted-foreground">No files shared yet.</p>
   }
 
   return (
@@ -532,12 +532,12 @@ function FilesTab({ files }: FilesTabProps) {
 
         return (
           <div key={f.id} className="flex items-center gap-2 py-1.5">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-bg-tertiary">
-              <File className="h-3.5 w-3.5 text-text-muted" />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-secondary">
+              <File className="h-3.5 w-3.5 text-muted-foreground" />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs text-text-primary">{f.key || 'Unknown file'}</p>
-              {sizeStr && <p className="text-[10px] text-text-muted">{sizeStr}</p>}
+              <p className="truncate text-xs text-foreground">{f.key || 'Unknown file'}</p>
+              {sizeStr && <p className="text-[10px] text-muted-foreground">{sizeStr}</p>}
             </div>
           </div>
         )
@@ -552,7 +552,7 @@ interface HealthTabProps {
 
 function HealthTab({ state }: HealthTabProps) {
   if (!state) {
-    return <p className="py-8 text-center text-xs text-text-muted">No health data yet.</p>
+    return <p className="py-8 text-center text-xs text-muted-foreground">No health data yet.</p>
   }
 
   const metrics = [
@@ -585,7 +585,7 @@ function HealthTab({ state }: HealthTabProps) {
         return (
           <div key={m.label} className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-text-muted">{m.label}</span>
+              <span className="text-xs text-muted-foreground">{m.label}</span>
               <span
                 className={cn(
                   'text-xs font-medium',
@@ -608,17 +608,17 @@ function HealthTab({ state }: HealthTabProps) {
         )
       })}
 
-      <div className="rounded-[var(--radius-md)] bg-bg-tertiary p-3">
-        <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-text-muted">
+      <div className="rounded-[var(--radius-md)] bg-secondary p-3">
+        <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
           Recommendations
         </p>
         {state.health_score < 0.6 && (
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-muted-foreground">
             Response times are high. Consider responding faster to improve engagement.
           </p>
         )}
         {state.media_count === 0 && state.message_count > 10 && (
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-muted-foreground">
             No media shared yet. Sharing images or documents can improve conversation quality.
           </p>
         )}
@@ -628,7 +628,7 @@ function HealthTab({ state }: HealthTabProps) {
           </p>
         )}
         {state.message_count < 5 && (
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-muted-foreground">
             Conversation is still new. More messages will improve insights.
           </p>
         )}
@@ -695,21 +695,21 @@ function GraphSection({ chatId }: { chatId: string }) {
             setSelectedNode(null)
             setRelatedNodes([])
           }}
-          className="flex items-center gap-1 text-xs text-text-muted transition-colors hover:text-text-primary"
+          className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to graph
         </button>
 
-        <div className="rounded-[var(--radius-md)] bg-bg-tertiary p-3">
+        <div className="rounded-[var(--radius-md)] bg-secondary p-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-bg-active">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-accent/20">
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-text-primary">{node.value}</p>
+              <p className="text-sm font-medium text-foreground">{node.value}</p>
               <div className="flex items-center gap-2">
                 <Badge variant="default" className="text-[10px]">{node.entity_type}</Badge>
-                <span className="text-[10px] text-text-muted">{node.mention_count}x</span>
+                <span className="text-[10px] text-muted-foreground">{node.mention_count}x</span>
               </div>
             </div>
           </div>
@@ -717,7 +717,7 @@ function GraphSection({ chatId }: { chatId: string }) {
 
         {relatedNodes.length > 0 && (
           <div>
-            <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               Relationships
             </p>
             <div className="space-y-1">
@@ -726,17 +726,17 @@ function GraphSection({ chatId }: { chatId: string }) {
                 return (
                   <div
                     key={`${r.direction}-${r.edge.id}`}
-                    className="flex items-center gap-2 rounded-[var(--radius-md)] bg-bg-tertiary px-2.5 py-1.5"
+                    className="flex items-center gap-2 rounded-[var(--radius-md)] bg-secondary px-2.5 py-1.5"
                   >
-                    <Icon className="h-3.5 w-3.5 shrink-0 text-text-muted" />
+                    <Icon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
-                        <span className="text-[10px] text-text-muted">
+                        <span className="text-[10px] text-muted-foreground">
                           {r.direction === 'outgoing' ? `${r.edge.relationship} →` : `← ${r.edge.relationship}`}
                         </span>
-                        <span className="truncate text-xs text-text-primary">{r.node.value}</span>
+                        <span className="truncate text-xs text-foreground">{r.node.value}</span>
                       </div>
-                      <p className="text-[10px] text-text-muted">{r.node.entity_type}</p>
+                      <p className="text-[10px] text-muted-foreground">{r.node.entity_type}</p>
                     </div>
                   </div>
                 )
@@ -746,7 +746,7 @@ function GraphSection({ chatId }: { chatId: string }) {
         )}
 
         {relatedNodes.length === 0 && (
-          <p className="py-4 text-center text-xs text-text-muted">No relationships yet</p>
+          <p className="py-4 text-center text-xs text-muted-foreground">No relationships yet</p>
         )}
       </div>
     )
@@ -757,12 +757,12 @@ function GraphSection({ chatId }: { chatId: string }) {
       <div className="relative">
         {showSearch && (
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter entities..."
-              className="w-full rounded-[var(--radius-md)] border border-border bg-bg-primary py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-text-muted outline-none transition-colors focus:border-border-accent focus:ring-1 focus:ring-accent-ring"
+              className="w-full rounded-[var(--radius-md)] border border-border bg-background py-1.5 pl-8 pr-3 text-xs text-foreground placeholder-text-muted outline-none transition-colors focus:border-border focus:ring-1 focus:ring-ring-primary/30"
               autoFocus
             />
           </div>
@@ -770,7 +770,7 @@ function GraphSection({ chatId }: { chatId: string }) {
         {!showSearch && nodes.length > 3 && (
           <button
             onClick={() => setShowSearch(true)}
-            className="flex w-full items-center gap-2 rounded-[var(--radius-md)] border border-border bg-bg-primary px-3 py-1.5 text-xs text-text-muted transition-colors hover:bg-bg-hover"
+            className="flex w-full items-center gap-2 rounded-[var(--radius-md)] border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-secondary"
           >
             <Search className="h-3.5 w-3.5" />
             Filter entities...
@@ -779,7 +779,7 @@ function GraphSection({ chatId }: { chatId: string }) {
       </div>
 
       {filteredNodes.length === 0 && (
-        <p className="py-8 text-center text-xs text-text-muted">
+        <p className="py-8 text-center text-xs text-muted-foreground">
           {searchQuery
             ? 'No matching entities found.'
             : 'No entities extracted yet. Send messages to build the graph.'}
@@ -794,17 +794,17 @@ function GraphSection({ chatId }: { chatId: string }) {
             <button
               key={node.id}
               onClick={() => selectNode(node.id)}
-              className="flex w-full items-center gap-2 rounded-[var(--radius-md)] px-2.5 py-1.5 text-left transition-colors hover:bg-bg-hover"
+              className="flex w-full items-center gap-2 rounded-[var(--radius-md)] px-2.5 py-1.5 text-left transition-colors hover:bg-secondary"
             >
-              <Icon className="h-3.5 w-3.5 shrink-0 text-text-muted" />
+              <Icon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs text-text-primary">{node.value}</p>
+                <p className="truncate text-xs text-foreground">{node.value}</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] uppercase text-text-muted">{node.entity_type}</span>
-                  <span className="text-[10px] text-text-muted">
+                  <span className="text-[10px] uppercase text-muted-foreground">{node.entity_type}</span>
+                  <span className="text-[10px] text-muted-foreground">
                     {nodeEdges.length} edge{nodeEdges.length !== 1 ? 's' : ''}
                   </span>
-                  <span className="text-[10px] text-text-muted">{node.mention_count}x</span>
+                  <span className="text-[10px] text-muted-foreground">{node.mention_count}x</span>
                 </div>
               </div>
             </button>

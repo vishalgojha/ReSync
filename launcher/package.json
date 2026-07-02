@@ -1,0 +1,13 @@
+{
+  "name": "resync-launcher",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Launcher for ReSync — starts backend, opens browser, manages process lifecycle",
+  "scripts": {
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.22.4"
+  }
+}

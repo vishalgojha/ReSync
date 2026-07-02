@@ -1,0 +1,16 @@
+[Unit]
+Description=ReSync — Self-hosted WhatsApp browser
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/opt/resync
+ExecStart=/opt/resync/launcher/linux/start-resync.sh
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=4000
+
+[Install]
+WantedBy=multi-user.target

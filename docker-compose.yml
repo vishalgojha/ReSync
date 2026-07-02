@@ -1,21 +1,16 @@
 services:
-  backend:
-    build: ./backend
+  resync:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "4000:4000"
     volumes:
-      - backend-data:/app/data
+      - resync-data:/app/backend/data
     environment:
       - PORT=4000
-    restart: unless-stopped
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
+      - NODE_ENV=production
     restart: unless-stopped
 
 volumes:
-  backend-data:
+  resync-data:
